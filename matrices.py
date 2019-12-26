@@ -149,10 +149,6 @@ class Matrix:
 
             return Matrix([[sum(col * row) for col in [Row(val.get_col_num(i)) for i in range(1, val.col_tot_num + 1)]] for row in self])
 
-            # print(row * col)
-
-            # return Matrix([sum(col * row) for row in val] for col in [Row(self.get_col_num(i)) for i in range(1, self.col_tot_num + 1)])
-
     def __pow__(self, val):
 
         new_matrix = Matrix([r for r in self.matrix])
@@ -167,8 +163,6 @@ class Matrix:
     def __delitem__(self, row_num):
         for i in range(1, self.get_length()[1] + 1):
             del self.matrix[row_num - 1][i]
-
-        # self.matrix[row_num - 1] = [0 for entry in range(self.row_tot_num)]
 
     def get_length(self):
         return [self.row_tot_num, self.col_tot_num]
@@ -207,7 +201,7 @@ class Matrix:
         del new_row[entry_num]
         return Matrix([row if num != row_num else new_row for row, num in zip(self.matrix, range(1, self.row_tot_num + 1))])
 
-        # e stands for elementary row operations
+    # e stands for elementary row operations
 
     def e_row_interchange(self, first, second):
         temp = self[second]
@@ -229,20 +223,5 @@ class Matrix:
 
 if __name__ == '__main__':
 
-    m = Matrix([[1, 1],
-                [1, 2]])
-    r = Row([1, 2, 3])
-
-    # print(repr(Matrix(m)))
-
-    print(m ** 2)
-    l = [0, 1, 2, 3]
-    l[0] = 1
-    print(Matrix.iMatrix(2))
-    # f = SingleVarFunction(' + 2x')
-    # print(f)
-    # print(1 / (300(0.0033333333333333335)))
-    # t = f.evaluate(1)
-    # print(repr(f)
-
-    # print(f)
+    pass
+    #tests
