@@ -229,20 +229,5 @@ class Matrix:
 
 if __name__ == '__main__':
 
-    m = Matrix([[1, 1],
-                [1, 2]])
-    r = Row([1, 2, 3])
-
-    # print(repr(Matrix(m)))
-
-    print(m ** 2)
-    l = [0, 1, 2, 3]
-    l[0] = 1
-    print(Matrix.iMatrix(2))
-    # f = SingleVarFunction(' + 2x')
-    # print(f)
-    # print(1 / (300(0.0033333333333333335)))
-    # t = f.evaluate(1)
-    # print(repr(f)
-
-    # print(f)
+    # tests
+    pass
