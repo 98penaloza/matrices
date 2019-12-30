@@ -149,10 +149,6 @@ class Matrix:
 
             return Matrix([[sum(col * row) for col in [Row(val.get_col_num(i)) for i in range(1, val.col_tot_num + 1)]] for row in self])
 
-            # print(row * col)
-
-            # return Matrix([sum(col * row) for row in val] for col in [Row(self.get_col_num(i)) for i in range(1, self.col_tot_num + 1)])
-
     def __pow__(self, val):
 
         new_matrix = Matrix([r for r in self.matrix])
@@ -167,8 +163,6 @@ class Matrix:
     def __delitem__(self, row_num):
         for i in range(1, self.get_length()[1] + 1):
             del self.matrix[row_num - 1][i]
-
-        # self.matrix[row_num - 1] = [0 for entry in range(self.row_tot_num)]
 
     def get_length(self):
         return [self.row_tot_num, self.col_tot_num]
@@ -227,5 +221,10 @@ class Matrix:
 
 if __name__ == '__main__':
 
-    # tests
+<< << << < HEAD
+# tests
     pass
+== == == =
+    pass
+    # tests
+>>>>>> > d7ae14eae7f8e3901971fca97e15957c738bbe8d
