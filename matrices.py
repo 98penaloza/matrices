@@ -203,11 +203,9 @@ class Matrix:
         return iter(self.matrix)
 
     def del_entry(row_num, entry_num):
-        new_row = self[row_num]
-        del new_row[entry_num]
-        return Matrix([row if num != row_num else new_row for row, num in zip(self.matrix, range(1, self.row_tot_num + 1))])
+        del self[row_num][entry_num]
 
-        # e stands for elementary row operations
+    # e stands for elementary row operations
 
     def e_row_interchange(self, first, second):
         temp = self[second]
@@ -219,10 +217,10 @@ class Matrix:
         return new_matrix
 
     def e_row_addition(self, first, second):
-
         new_m[second] = self[first] + self[second]
         return new_m
 
+    #
     def __setitem__(self, i, row):
         self.matrix = [r if num != i else row for r, num in zip(self.matrix, range(1, self.get_length()[0] + 1))]
 
