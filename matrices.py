@@ -3,8 +3,10 @@ import math
 
 class Row:
     def __init__(self, row):
+        if type(row) not in (list, tuple):
+            raise AssertionError(f'{row} is not an instance of a sequancial ordered numbers. \n')
         if False in [type(e) in (int, float) for e in row]:
-            raise AssertionError(f'{row} contains a non numerical value.')
+            raise AssertionError(f'{row} contains a non numerical value. \n')
         self.row = [int(entry) if float(entry) == int(entry) else float(entry) for entry in row]
 
     def __str__(self):
@@ -22,7 +24,10 @@ class Row:
     def __add__(self, val):
         if type(val) in [int, float]:
             return eval(f'{type(self).__name__}(' + str([entry + val for entry in self.row]) + ')')
-        elif type(val) in (Row, list):
+        elif type(val) in (Row, Column, list, tuple):
+            if len(self) != len(val):
+                raise AssertionError(f'The length of {val} is inconsistent. \n')
+
             return eval(f'{type(self).__name__}(' + str([e1 + e2 for e1, e2 in zip(self, val)]) + ')')
 
     def __sub__(self, val):

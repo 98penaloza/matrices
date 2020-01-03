@@ -10,7 +10,14 @@ knowledged acquered from linear algebra courses.
 CLASSES
 ###
     Row
-        A row
+        A sequence of numerical values read from left to right.
+
+        A row is initialized as followed Row([...]). Row forcefully has to be initialized with an instance of
+            a sequence of ordered numerical values such as list, tuple. and the values in such data structure
+            has to be numerical values.
+
+
+
 
 
 
