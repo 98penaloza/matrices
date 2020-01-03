@@ -261,6 +261,8 @@ class Matrix:
     def get_transpose(self):
         return Matrix([self.get_col_num(num).get_column() for num in range(1, self.get_length()[1] + 1)])
 
+
+    # special getters
     def get_addRow(self, *rows):
         t = self.matrix[:]
         for r in rows:
