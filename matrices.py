@@ -277,9 +277,5 @@ class Matrix:
 
 if __name__ == '__main__':
     # tests
-    c = Column([1, 2, 3])
-
-    m = Matrix.byColMatrix([c, [e + 1 for e in c], 2 + c])
-    print(m)
 
     pass
