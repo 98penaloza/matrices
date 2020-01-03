@@ -217,10 +217,10 @@ class Matrix:
 
     # iters
     def iter_rows(self):
-        return iter(self)
+        return iter(self.matrix)
 
     def iter_cols(self):
-        return iter([self.get_column(n) for n in range(1, 1 + self.get_length()[1])])
+        return iter([self.get_col_num(n) for n in range(1, 1 + self.get_length()[1])])
 
     # mutators
     def addRow(self, *rows):
@@ -341,9 +341,12 @@ class Matrix:
         #
         #
         #
+
         return self.isSquare() and True
 
 
 if __name__ == '__main__':
     # tests
+    m = Matrix.iMatrix(3)
+    print([r for r in m.iter_cols()])
     pass
