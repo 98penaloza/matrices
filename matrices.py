@@ -93,7 +93,6 @@ class Column(Row):
 
 
 class Matrix:
-
     # Different ways to initialize
     def __init__(self, matrix: [[int]]):
         def _check_legal():
@@ -222,7 +221,7 @@ class Matrix:
     def iter_cols(self):
         return iter([self.get_col_num(n) for n in range(1, 1 + self.get_length()[1])])
 
-    # mutators
+    # Mutators
     def addRow(self, *rows):
         for r in rows:
             if len(r) != self.get_length()[1]:
@@ -261,8 +260,7 @@ class Matrix:
     def get_transpose(self):
         return Matrix([self.get_col_num(num).get_column() for num in range(1, self.get_length()[1] + 1)])
 
-
-    # special getters
+    # Special getters
     def get_addRow(self, *rows):
         t = self.matrix[:]
         for r in rows:
