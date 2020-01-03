@@ -40,6 +40,10 @@ class Matrix:
     def augmentedMatrix(self, matrix, column):
         return matrix.get_concatenateMatrix(Matrix.Vector(column))
 
+    @classmethod
+    def byColMatrix(self, cols):
+        return Matrix([Row(c) for c in cols]).get_transpose()
+
     # Some dunnder methods
     def __str__(self):
         text = ''
@@ -103,7 +107,7 @@ class Matrix:
         elif type(val) == Matrix:
             if self.get_length()[1] != val.get_length[0]:
                 raise AssertionError(f"Both matrices have different length.")
-            return Matrix([[sum(col * row) for col in [Row(val.get_col_num(i)) for i in range(1, val.get_length()[1] + 1)]] for row in self])
+            return Matrix([[sum(col * row) for col in [Row(val.get_Col(i)) for i in range(1, val.get_length()[1] + 1)]] for row in self])
 
     def __pow__(self, val):
         new_matrix = Matrix([r for r in self.matrix])
@@ -129,7 +133,7 @@ class Matrix:
         return iter(self.matrix)
 
     def iter_cols(self):
-        return iter([self.get_col_num(n) for n in range(1, 1 + self.get_length()[1])])
+        return iter([self.get_Col(n) for n in range(1, 1 + self.get_length()[1])])
 
     # Mutators
     def addRow(self, *rows):
@@ -154,21 +158,17 @@ class Matrix:
         n = self.get_removeCol(col_num)
         self.matrix = n.matrix
 
-    # Getters
-    def get_length(self):
-        # rows, cols
-        return [len(self.matrix), len(self.matrix[0])]
+    # eRow stands for elementary row operations (mutators)
+    def eRow_interch(self, first, second):
+        temp = self[second]
+        self[second] = self[first]
+        self[first] = temp
 
-    def get_col_num(self, col_num):
-        if self.get_length()[1] < col_num or col_num < 1:
-            raise IndexError(f"Matrix row out of range.")
-        return Column([row[col_num] for row in self.matrix])
+    def eRow_mul(self, row, val):
+        self[row] = self[row] * val
 
-    def get_row_num(self, row_num):
-        return self[row_num]
-
-    def get_transpose(self):
-        return Matrix([self.get_col_num(num).get_column() for num in range(1, self.get_length()[1] + 1)])
+    def eRow_add(self, first, second):
+        self[second] = self[first] + self[second]
 
     # Special getters
     def get_addRow(self, *rows):
@@ -202,19 +202,39 @@ class Matrix:
         del r_matrix[col_num - 1]
         return Matrix(r_matrix).get_transpose()
 
-    # e stands for elementary row operations
-    def e_row_interchange(self, first, second):
-        temp = self[second]
-        self[second] = self[first]
-        self[first] = temp
+    def get_eRow_interch(self, first, second):
+        copy = self.get_copy()
+        copy.eRow_interch(first, second)
+        return copy
 
-    def e_row_multiplication(self, row, val):
-        new_matrix[row] = self[row] * val
-        return new_matrix
+    def get_eRow_mul(self, row, val):
+        copy = self.get_copy()
+        copy.eRow_mul(row, val)
+        return copy
 
-    def e_row_addition(self, first, second):
-        new_m[second] = self[first] + self[second]
-        return new_m
+    def get_eRow_add(self, first, second):
+        copy = self.get_copy()
+        copy.eRow_add(first, second)
+        return copy
+
+    # Getters
+    def get_length(self):
+        # rows, cols
+        return [len(self.matrix), len(self.matrix[0])]
+
+    def get_Col(self, col_num):
+        if self.get_length()[1] < col_num or col_num < 1:
+            raise IndexError(f"Matrix row out of range.")
+        return Column([row[col_num] for row in self.matrix])
+
+    def get_Row(self, row_num):
+        return self[row_num]
+
+    def get_transpose(self):
+        return Matrix([self.get_Col(num).get_column() for num in range(1, self.get_length()[1] + 1)])
+
+    def get_copy(self):
+        return eval(repr(self))
 
     # some Is's
     def isVector(self):
@@ -257,9 +277,9 @@ class Matrix:
 
 if __name__ == '__main__':
     # tests
-    l = [1, 2, 3]
-    print(Row(l)[1:])
+    c = Column([1, 2, 3])
 
-    m = Matrix.iMatrix(3)
-    print([r for r in m.iter_cols()])
+    m = Matrix.byColMatrix([c, [e + 1 for e in c], 2 + c])
+    print(m)
+
     pass

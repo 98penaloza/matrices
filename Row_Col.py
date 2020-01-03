@@ -2,7 +2,7 @@
 
 class Row:
     def __init__(self, row):
-        if type(row) not in (list, tuple):
+        if type(row) not in (list, tuple, Row, Column):
             raise AssertionError(f'{row} is not an instance of a sequancial ordered numbers. \n')
         if False in [type(e) in (int, float) for e in row]:
             raise AssertionError(f'{row} contains a non numerical value. \n')
