@@ -275,9 +275,7 @@ class Matrix:
         return self.isSquare() and True
 
 
-
-
-
 if __name__ == '__main__':
     pass
+    print("Hello Wrld\n")
     # test
