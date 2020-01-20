@@ -73,7 +73,7 @@ class Matrix:
     def __iter__(self):
         return iter(self.matrix)
 
-    def del_entry(row_num, entry_num):
+    def del_entry(self, row_num, entry_num):
         del self[row_num][entry_num]
 
     # Operands/operations
@@ -110,7 +110,6 @@ class Matrix:
             return Matrix([[sum(col * row) for col in [Row(val.get_Col(i)) for i in range(1, val.get_length()[1] + 1)]] for row in self])
 
     def __pow__(self, val):
-        new_matrix = Matrix([r for r in self.matrix])
         return eval('*'.join([repr(Matrix(self.matrix)) for t in range(val)]))
 
     def dotProduct(self, vector):
@@ -238,10 +237,10 @@ class Matrix:
 
     # some Is's
     def isVector(self):
-        return self.get_length[1] == 1
+        return self.get_length()[1] == 1
 
     def isSquare(self):
-        return self.get_length[0] == self.get_length[1]
+        return self.get_length()[0] == self.get_length()[1]
 
     def isLinearlyIndependent(self):
         '''
@@ -280,6 +279,5 @@ if __name__ == '__main__':
     # tests
 
     pass
-    print("Hello World\n")
 
     # test
