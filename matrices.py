@@ -277,5 +277,6 @@ class Matrix:
 
 if __name__ == '__main__':
     pass
-    print("Hello Wrld\n")
+    print("Hello World\n")
+
     # test
