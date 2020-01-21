@@ -135,6 +135,9 @@ class Matrix:
         return iter([self.get_Col(n) for n in range(1, 1 + self.get_length()[1])])
 
     # Mutators
+    def reorder(self):
+        self.matrix = sorted([r for r in self.matrix], key = lambda row: row.get_pivot_indx())
+
     def addRow(self, *rows):
         for r in rows:
             if len(r) != self.get_length()[1]:
@@ -216,6 +219,33 @@ class Matrix:
         copy.eRow_add(first, second)
         return copy
 
+    def get_echelon_form(self, reduced = False):
+        temp = self.get_copy()
+        i = 1
+        while True:
+            temp.reorder()
+            if i == temp.get_length()[0] + 1:
+                break
+            j = temp[i].get_pivot_indx()
+            if j >  temp.get_length()[1]:
+                break
+            #pivot = temp[i][j]
+            if reduced:
+                temp[i] = temp[i].get_unit(j) if j != 0 else temp[i]
+                for row in range(1, temp.get_length()[0] + 1):
+                    if row != i:
+                        val = temp[row][j]
+                        temp[row] = temp[row] - val * temp[i].get_unit(j) if j != 0 else temp[i]
+            else:
+                for row in range(i, temp.get_length()[0] + 1):
+                    if row != i:
+                        val = temp[row][j]
+                        temp[row] = temp[row] - val * temp[i].get_unit(j)
+            i += 1
+            
+        return temp
+
+
     # Getters
     def get_length(self):
         # rows, cols
@@ -277,7 +307,17 @@ class Matrix:
 if __name__ == '__main__':
 
     # tests
+    m = Matrix([[1,2,3,-1],
+                [4,5,6,3],
+                [7,8,9,5]])
+
+    print (m.get_echelon_form(reduced = True))
+    
+
 
     pass
 
     # test
+
+
+

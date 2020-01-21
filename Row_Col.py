@@ -103,6 +103,15 @@ class Row:
     def del_entry(self, entry_num):
         del self.row[entry_num - 1]
 
+    def get_pivot_indx(self):
+        counter = 1
+        for val in self:
+            if val == 0:
+                counter += 1
+            else:
+                break
+        return counter
+
 
 class Column(Row):
     def __str__(self):
