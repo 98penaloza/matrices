@@ -85,7 +85,6 @@ class Array:
     def __setitem__(self, entry, val):
         self.row[entry - 1] = val
 
-
     def __repr__(self):
         return f"{type(self).__name__}({self.row})"
 
@@ -135,6 +134,10 @@ class Array:
             self._raise_length(val)
             return eval(f'{type(self).__name__}(' + str([e2 / e1 for e1, e2 in zip(self, val)]) + ')')
 
+    def __eq__(self, right):
+        if type(right) in (Row, Column, Array, list, tuple, set):
+            return False if len(self) != len(right) else  not(0 in ([1 if i == j else 0 for i, j in zip(self, right) ]))
+
     def __iter__(self):
         return iter(self.row)
 
@@ -173,27 +176,16 @@ class Array:
                 break
         return counter if counter <= len(self) else None
 
-
     def isZero(self):
         return (sum([e for e in self.row]) == 0)
-
-
-
-
-
-
-
-
-
-
 
 
 class Row(Array):
     def __str__(self):
         return '| ' + ' '.join([str(entry) for entry in self.row]) + ' |'
+
     def get_row(self):
         return self.row
-
 
 
 class Column(Array):
@@ -204,7 +196,7 @@ class Column(Array):
     def get_column(self):
         return self.row
 
+
 if __name__ == '__main__':
-    a = Array([0,0,0,0])
+    a = Array([0, 0, 0, 0])
     print(a.isZero())
-    

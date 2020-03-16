@@ -127,6 +127,13 @@ class Matrix:
         print(n)
         return sum(n)
 
+    def __eq__(self, right):
+        if type(right) == Matrix:
+            if self.get_length() == right.get_length():
+                return not( 0 in [1 if i==j else 0 for i, j in zip(self, right)])
+            else:
+                return False
+
     # iters
     def iter_rows(self):
         return iter(self.matrix)
@@ -247,13 +254,13 @@ class Matrix:
         temp = self.get_copy()
         if self.isSquare():
             temp.concatenateMatrix(Matrix.iMatrix(temp.get_length()[0]))
-            temp = temp.get_echelon_form(reduced = True)
+            temp = temp.get_echelon_form(reduced=True)
             for i in range(temp.get_length()[0]):
                 temp.removeCol(1)
             return temp
-        
+
         else:
-            return 
+            return
 
     # Getters
     def get_length(self):
@@ -273,9 +280,6 @@ class Matrix:
 
     def get_copy(self):
         return eval(repr(self))
-
-
-
 
     # some Is's
     def isVector(self):
@@ -297,7 +301,6 @@ class Matrix:
         '''
         pass
 
-
     def isInconsistent(self):
         #
         #
@@ -315,18 +318,17 @@ class Matrix:
 if __name__ == '__main__':
 
     # tests
-    m = Matrix([[1, 2, 3, 1, 0, 0],
-                [1, 1, 1, 0, 1, 0],
-                [0, 1, 0, 0, 0, 1]])
+    m = Matrix([[1, 2, 0],
+                [1, 0, 1],
+                [0, 0, 0]])
 
-    n = Matrix([[1, 2, 3],
-                [1, 1, 1],
-                [0, 1, 0]])
+    n = Matrix([[1, 2, 0],
+                [1, 0, 1],
+                [0, 0, 0]])
 
-    print(m.get_echelon_form(reduced=True))
-    print( n * n.getInverse() ==  Matrix.iMatrix(n.get_length()[0])  )
 
-    print(n.isInvertible())
+    print(m == n)
+    print(n.getInverse() * n)
     pass
     # test
     # TODO Add __eq__() method to compare whether two matrices are the same
