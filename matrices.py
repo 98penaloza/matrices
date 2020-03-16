@@ -258,14 +258,40 @@ class Matrix:
             for i in range(temp.get_length()[0]):
                 temp.removeCol(1)
             return temp
-
         else:
             return
+
+
+    def _getNewM(m, r_c):
+        n = m.get_copy()
+        n.removeRow(r_c[0])
+        n.removeCol(r_c[1])
+
+        return n
+
+    def _sumDet(l):
+        return sum(num if e_o % 2 == 0 else -num  for num, e_o  in zip(l, [n for n in range(len(l))])     )
+
+    def getDeterminant(self):
+        if self.get_length() == (1,1):
+            return None
+        if not self.isSquare():
+            return None
+        else:
+            if self.get_length() == (2,2):
+                return self[1][1] * self[2][2] - self[1][2] * self[2][1]
+            else:
+                return Matrix._sumDet(   [  self[1][i] * Matrix._getNewM(self, (1, i)).getDeterminant() for i in range(1, 1+ len(self[1])  ) ]    )
+
+
+
+
+
 
     # Getters
     def get_length(self):
         # rows, cols
-        return [len(self.matrix), len(self.matrix[0])]
+        return (len(self.matrix), len(self.matrix[0]))
 
     def get_Col(self, col_num):
         if self.get_length()[1] < col_num or col_num < 1:
@@ -322,13 +348,17 @@ if __name__ == '__main__':
                 [1, 0, 1],
                 [0, 0, 0]])
 
-    n = Matrix([[1, 2, 0],
-                [1, 0, 1],
-                [0, 0, 0]])
+    n = Matrix([[1, 2, 0, 2, 1],
+                [1, 1, 1, 2, 3],
+                [0, 0, 1, 1, 1],
+                [1, 1, 1, 1, 1],
+                [1, 2, 1, 2, 1]])
 
 
-    print(m == n)
-    print(n.getInverse() * n)
+    
+
+    print(n.getDeterminant())
+    
     pass
     # test
     # TODO Add __eq__() method to compare whether two matrices are the same
