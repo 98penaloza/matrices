@@ -25,7 +25,7 @@ class Matrix:
     @classmethod
     def iMatrix(self, length):
         matrix = []
-        for i in range(1, 1 + length):
+        for i in range( length):
             r = Row([0 for t in range(length)])
             r[i] = 1
             matrix.append(r)
@@ -42,14 +42,14 @@ class Matrix:
 
     @classmethod
     def byColMatrix(self, cols):
-        return Matrix([Row(c) for c in cols]).get_transpose()
+        return Matrix([Row(c) for c in cols]).getTranspose()
 
     # Some dunnder methods
     def __str__(self):
         text = ''
         for row in self.matrix:
             text += '|'
-            for col_num in range(1, self.get_length()[1] + 1):
+            for col_num in range(self.get_length()[1]):
                 maxi = max([len(str(row[col_num])) for row in self.matrix])
                 text += eval("'{" + f":^{maxi+2}" + "}'.format(str(int(row[col_num])) if type(row[col_num]) == int else str(float(row[col_num])))")
             text += '|\n'
@@ -59,16 +59,16 @@ class Matrix:
         return 'Matrix([' + ',\n        '.join([repr(row) for row in self.matrix]) + '])'
 
     def __getitem__(self, row_num):
-        if row_num < 1 or row_num > self.get_length()[1]:
+        if row_num < 0 or row_num == self.get_length()[1]:
             raise IndexError(f"Matrix row out of range.")
-        return self.matrix[row_num - 1]
+        return self.matrix[row_num]
 
     def __delitem__(self, row_num):
-        for i in range(1, self.get_length()[1] + 1):
-            del self.matrix[row_num - 1][i]
+        for i in range( self.get_length()[1] ):
+            del self.matrix[row_num ][i]
 
     def __setitem__(self, i, row):
-        self.matrix = [r if num != i else row for r, num in zip(self.matrix, range(1, self.get_length()[0] + 1))]
+        self.matrix = [r if num != i else row for r, num in zip(self.matrix, range(self.get_length()[0] ))]
 
     def __iter__(self):
         return iter(self.matrix)
@@ -107,7 +107,10 @@ class Matrix:
         elif type(val) == Matrix:
             if self.get_length()[1] != val.get_length()[0]:
                 raise AssertionError(f"Both matrices have different length.")
-            return Matrix([[sum(col * row) for col in [Row(val.get_Col(i)) for i in range(1, val.get_length()[1] + 1)]] for row in self])
+            return Matrix([[sum(col * row) for col in [Row(val.get_Col(i)) for i in range( val.get_length()[1])]] for row in self])
+
+    def __rmul__(self, r):
+        return self * r
 
     def __pow__(self, val):
         return eval('*'.join([repr(Matrix(self.matrix)) for t in range(val)]))
@@ -123,7 +126,7 @@ class Matrix:
             if vector.get_length() != self.get_length():
                 raise AssertionError(f"'{self.get_length()}' and '{vector.get_length()}'are different. ")
         _check_legal()
-        n = self.get_transpose()[1] * vector.get_transpose()[1]
+        n = self.getTranspose()[1] * vector.getTranspose()[1]
         print(n)
         return sum(n)
 
@@ -139,11 +142,11 @@ class Matrix:
         return iter(self.matrix)
 
     def iter_cols(self):
-        return iter([self.get_Col(n) for n in range(1, 1 + self.get_length()[1])])
+        return iter([self.get_Col(n) for n in range( self.get_length()[1])])
 
     # Mutators
     def reorder(self):
-        self.matrix = sorted([r for r in self.matrix], key=lambda row: row.get_pivot_indx() if row.get_pivot_indx() != None else self.get_length()[1] + 1)
+        self.matrix = sorted([r for r in self.matrix], key=lambda row: row.get_pivot_indx() if row.get_pivot_indx() != None else self.get_length()[1] )
 
     def addRow(self, *rows):
         for r in rows:
@@ -189,27 +192,27 @@ class Matrix:
         return Matrix(t)
 
     def get_addCol(self, *cols):
-        new = [c for c in self.get_transpose()]
+        new = [c for c in self.getTranspose()]
         for c in cols:
             if len(c) != self.get_length()[0]:
                 raise AssertionError(f'The col {c} has an inconsistent length. ')
             new.append(c)
-        return Matrix(new).get_transpose()
+        return Matrix(new).getTranspose()
 
     def get_concatenateMatrix(self, matrix):
         if self.get_length()[0] != matrix.get_length()[0]:
             raise AssertionError(f'The number of columns is inconsistent.')
-        return Matrix(self.get_transpose().matrix + matrix.get_transpose().matrix).get_transpose()
+        return Matrix(self.getTranspose().matrix + matrix.getTranspose().matrix).getTranspose()
 
     def get_removeRow(self, row_num):
         t = self.matrix[:]
-        del t[row_num - 1]
+        del t[row_num]
         return Matrix(t)
 
     def get_removeCol(self, col_num):
-        r_matrix = self.get_transpose().matrix
-        del r_matrix[col_num - 1]
-        return Matrix(r_matrix).get_transpose()
+        r_matrix = self.getTranspose().matrix
+        del r_matrix[col_num]
+        return Matrix(r_matrix).getTranspose()
 
     def get_eRow_interch(self, first, second):
         copy = self.get_copy()
@@ -226,24 +229,29 @@ class Matrix:
         copy.eRow_add(first, second)
         return copy
 
-    def get_echelon_form(self, reduced=False):
+    def getEchelonForm(self, reduced=False):
         temp = self.get_copy()
-        i = 1
+        i = 0
         while True:
             temp.reorder()
-            if i == temp.get_length()[0] + 1:
+            if i == temp.get_length()[0] :
                 break
             j = temp[i].get_pivot_indx()
+
             if j == None:
                 break
             if reduced:
-                temp[i] = temp[i].get_unit(j) if j != 0 else temp[i]
-                for row in range(1, temp.get_length()[0] + 1):
+
+                temp[i] = temp[i].get_unit(j) 
+
+                for row in range( temp.get_length()[0]):
                     if row != i:
                         val = temp[row][j]
-                        temp[row] = temp[row] - val * temp[i].get_unit(j) if j != 0 else temp[i]
+
+                        temp[row] = temp[row] - val * temp[i].get_unit(j) 
+
             else:
-                for row in range(i, temp.get_length()[0] + 1):
+                for row in range(i, temp.get_length()[0]):
                     if row != i:
                         val = temp[row][j]
                         temp[row] = temp[row] - val * temp[i].get_unit(j)
@@ -254,23 +262,17 @@ class Matrix:
         temp = self.get_copy()
         if self.isSquare():
             temp.concatenateMatrix(Matrix.iMatrix(temp.get_length()[0]))
-            temp = temp.get_echelon_form(reduced=True)
+            temp = temp.getEchelonForm(reduced=True)
             for i in range(temp.get_length()[0]):
-                temp.removeCol(1)
+                temp.removeCol(0)
             return temp
         else:
             return
 
+    def getTranspose(self):
+        return Matrix([self.get_Col(num).get_column() for num in range(self.get_length()[1] )  ])
 
-    def _getNewM(m, r_c):
-        n = m.get_copy()
-        n.removeRow(r_c[0])
-        n.removeCol(r_c[1])
 
-        return n
-
-    def _sumDet(l):
-        return sum(num if e_o % 2 == 0 else -num  for num, e_o  in zip(l, [n for n in range(len(l))])     )
 
     def getDeterminant(self):
         if self.get_length() == (1,1):
@@ -279,12 +281,18 @@ class Matrix:
             return None
         else:
             if self.get_length() == (2,2):
-                return self[1][1] * self[2][2] - self[1][2] * self[2][1]
+                return self[0][0] * self[1][1] - self[0][1] * self[1][0]
             else:
-                return Matrix._sumDet(   [  self[1][i] * Matrix._getNewM(self, (1, i)).getDeterminant() for i in range(1, 1+ len(self[1])  ) ]    )
+                return Matrix._sumDet(   [  self[0][i] * Matrix._getNewM(self, (0, i)).getDeterminant() for i in range( len(self[0])  ) ]    )
+    
+    def _getNewM(m, r_c):
+        n = m.get_copy()
+        n.removeRow(r_c[0])
+        n.removeCol(r_c[1])
+        return n
 
-
-
+    def _sumDet(l):
+        return sum(num if e_o % 2 == 0 else -num  for num, e_o  in zip(l, [n for n in range(len(l))])     )
 
 
 
@@ -294,15 +302,14 @@ class Matrix:
         return (len(self.matrix), len(self.matrix[0]))
 
     def get_Col(self, col_num):
-        if self.get_length()[1] < col_num or col_num < 1:
-            raise IndexError(f"Matrix row out of range.")
+        if self.get_length()[1] == col_num or col_num < 0:
+            raise IndexError(f"Matrix Col out of range.")
         return Column([row[col_num] for row in self.matrix])
 
     def get_Row(self, row_num):
         return self[row_num]
 
-    def get_transpose(self):
-        return Matrix([self.get_Col(num).get_column() for num in range(1, self.get_length()[1] + 1)])
+    
 
     def get_copy(self):
         return eval(repr(self))
@@ -344,9 +351,9 @@ class Matrix:
 if __name__ == '__main__':
 
     # tests
-    m = Matrix([[1, 2, 0],
-                [1, 0, 1],
-                [0, 0, 0]])
+    m = Matrix([[2, -2, 4],
+                [4, 1, 2],
+                [6, 1, 2]])
 
     n = Matrix([[1, 2, 0, 2, 1],
                 [1, 1, 1, 2, 3],
@@ -355,9 +362,9 @@ if __name__ == '__main__':
                 [1, 2, 1, 2, 1]])
 
 
-    
-
-    print(n.getDeterminant())
+    print(m.getEchelonForm(reduced =True))
+    print(m.getTranspose())
+    print(m*m.getInverse())
     
     pass
     # test
