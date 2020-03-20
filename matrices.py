@@ -33,7 +33,7 @@ class Matrix:
 
     @classmethod
     def Vector(self, column):
-        if type(column) in (list, Column):
+        if type(column) in (list, Column, Row):
             return Matrix([[e] for e in column])
 
     @classmethod
@@ -229,6 +229,10 @@ class Matrix:
         copy.eRow_add(first, second)
         return copy
 
+
+
+# Other special getters
+
     def getEchelonForm(self, reduced=False):
         temp = self.get_copy()
         i = 0
@@ -272,8 +276,6 @@ class Matrix:
     def getTranspose(self):
         return Matrix([self.get_Col(num).get_column() for num in range(self.get_length()[1] )  ])
 
-
-
     def getDeterminant(self):
         if self.get_length() == (1,1):
             return None
@@ -298,7 +300,7 @@ class Matrix:
 
     # Getters
     def get_length(self):
-        # rows, cols
+        '''rows, cols'''
         return (len(self.matrix), len(self.matrix[0]))
 
     def get_Col(self, col_num):
@@ -322,30 +324,54 @@ class Matrix:
         return self.get_length()[0] == self.get_length()[1]
 
     def isLinearlyIndependent(self):
-        '''
-    args
-        self: it can be an instance of a matrix, or a set of columns.
+        temp0 = self.getEchelonForm(reduced=True)
+        return temp0 == Matrix.iMatrix(self.get_length()[0])
 
-    return
-        a boolean value which determines whether or not this is a linear independent set of vectors/columns.
 
-    description:
-    None yet
-        '''
-        pass
 
-    def isInconsistent(self):
-        #
-        #
-        #
-        #
-        #
-        #
-        pass
+    def isRowEquiTo(self, matrix):
+        temp0 = self.getEchelonForm(reduced=True)
+        temp1 = matrix.getEchelonForm(reduced=True)
+        return temp0 == temp1
+    
+
+
+    def isConsistent(self):
+        """ Must be an augmented matrix!!! """
+        temp = self.getEchelonForm(reduced = True)
+        temp = temp.get_Row(temp.get_length()[0]-1)
+        num = 0
+        for e in temp:
+            num += 1 if e != 0 else 0
+        return not (num == 1 and temp[len(temp)-1] != 0 )
+        
 
     def isInvertible(self):
+# 1. A is row-equivalent to the n×n identity matrix I_n.
+# 2. A has n pivot positions.
+# 3. The equation Ax=0 has only the trivial solution x=0.
+# 4. The columns of A form a linearly independent set.
+# 5. The linear transformation x|->Ax is one-to-one.
+# 6. For each column vector b in R^n, the equation Ax=b has a unique solution.
+# 7. The columns of A span R^n.
+# 8. The linear transformation x|->Ax is a surjection.
+# 9. There is an n×n matrix C such that CA=I_n.
+# 10. There is an n×n matrix D such that AD=I_n.
+# 11. The transpose matrix A^(T) is invertible.
+# 12. The columns of A form a basis for R^n.
+# 13. The column space of A is equal to R^n.
+# 14. The dimension of the column space of A is n.
+# 15. The rank of A is n.
+# 16. The null space of A is {0}.
+# 17. The dimension of the null space of A is 0.
+# 18. 0 fails to be an eigenvalue of A.
+# 19. The determinant of A is not zero.
+# 20. The orthogonal complement of the column space of A is {0}.
+# 21. The orthogonal complement of the null space of A is R^n.
+# 22. The row space of A is R^n.
+# 23. The matrix A has n non-zero singular values. 
 
-        return self.isSquare() and (self.getInverse() * self == self * self.getInverse() == Matrix.iMatrix(self.get_length()[0])) and True
+        return self.isSquare() and self.getDeterminant() != 0
 
 
 if __name__ == '__main__':
@@ -355,16 +381,15 @@ if __name__ == '__main__':
                 [4, 1, 2],
                 [6, 1, 2]])
 
-    n = Matrix([[1, 2, 0, 2, 1],
-                [1, 1, 1, 2, 3],
-                [0, 0, 1, 1, 1],
-                [1, 1, 1, 1, 1],
-                [1, 2, 1, 2, 1]])
+    n = Matrix([[1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 0]])
 
 
-    print(m.getEchelonForm(reduced =True))
-    print(m.getTranspose())
-    print(m*m.getInverse())
+
+    print(n.isInvertible())
+
     
     pass
     # test
