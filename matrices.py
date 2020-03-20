@@ -264,7 +264,7 @@ class Matrix:
 
     def getInverse(self):
         temp = self.get_copy()
-        if self.isSquare():
+        if self.isInvertible():
             temp.concatenateMatrix(Matrix.iMatrix(temp.get_length()[0]))
             temp = temp.getEchelonForm(reduced=True)
             for i in range(temp.get_length()[0]):
