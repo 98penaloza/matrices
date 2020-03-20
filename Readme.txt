@@ -4,10 +4,10 @@
 My repo/project matrix is a tool for people working (especially) with matrices and linear algebra.
 It is a LEARNING/TEACHING tool but, by not means, I intent to substitute linear algebra introdutory courses,
 nor I plan to provide a "cheating tool". Instead I'm trying to develop a tool that can be used along the
-knowledged acquered from linear algebra courses.
+knowledge acquered from linear algebra courses.
 
 ###
-CLASSES and METHODS
+CLASSES and METHODS (OUTDATED)
 ###
     Row
             A sequence of numerical values read from left to right. Its index start counting from 1 and it includes
