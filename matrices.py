@@ -25,7 +25,7 @@ class Matrix:
     @classmethod
     def iMatrix(self, length):
         matrix = []
-        for i in range( length):
+        for i in range(length):
             r = Row([0 for t in range(length)])
             r[i] = 1
             matrix.append(r)
@@ -64,11 +64,11 @@ class Matrix:
         return self.matrix[row_num]
 
     def __delitem__(self, row_num):
-        for i in range( self.get_length()[1] ):
-            del self.matrix[row_num ][i]
+        for i in range(self.get_length()[1]):
+            del self.matrix[row_num][i]
 
     def __setitem__(self, i, row):
-        self.matrix = [r if num != i else row for r, num in zip(self.matrix, range(self.get_length()[0] ))]
+        self.matrix = [r if num != i else row for r, num in zip(self.matrix, range(self.get_length()[0]))]
 
     def __iter__(self):
         return iter(self.matrix)
@@ -107,7 +107,7 @@ class Matrix:
         elif type(val) == Matrix:
             if self.get_length()[1] != val.get_length()[0]:
                 raise AssertionError(f"Both matrices have different length.")
-            return Matrix([[sum(col * row) for col in [Row(val.get_Col(i)) for i in range( val.get_length()[1])]] for row in self])
+            return Matrix([[sum(col * row) for col in [Row(val.get_Col(i)) for i in range(val.get_length()[1])]] for row in self])
 
     def __rmul__(self, r):
         return self * r
@@ -133,7 +133,7 @@ class Matrix:
     def __eq__(self, right):
         if type(right) == Matrix:
             if self.get_length() == right.get_length():
-                return not( 0 in [1 if i==j else 0 for i, j in zip(self, right)])
+                return not(0 in [1 if i == j else 0 for i, j in zip(self, right)])
             else:
                 return False
 
@@ -142,11 +142,11 @@ class Matrix:
         return iter(self.matrix)
 
     def iter_cols(self):
-        return iter([self.get_Col(n) for n in range( self.get_length()[1])])
+        return iter([self.get_Col(n) for n in range(self.get_length()[1])])
 
     # Mutators
     def reorder(self):
-        self.matrix = sorted([r for r in self.matrix], key=lambda row: row.get_pivot_indx() if row.get_pivot_indx() != None else self.get_length()[1] )
+        self.matrix = sorted([r for r in self.matrix], key=lambda row: row.get_pivot_indx() if row.get_pivot_indx() != None else self.get_length()[1])
 
     def addRow(self, *rows):
         for r in rows:
@@ -230,15 +230,15 @@ class Matrix:
         return copy
 
 
-
 # Other special getters
 
-    def getEchelonForm(self, reduced=False):
+    def getEchelonForm(self, reduced=False, p = False):
         temp = self.get_copy()
         i = 0
         while True:
+            if p: print(temp)
             temp.reorder()
-            if i == temp.get_length()[0] :
+            if i == temp.get_length()[0]:
                 break
             j = temp[i].get_pivot_indx()
 
@@ -246,13 +246,13 @@ class Matrix:
                 break
             if reduced:
 
-                temp[i] = temp[i].get_unit(j) 
+                temp[i] = temp[i].get_unit(j)
 
-                for row in range( temp.get_length()[0]):
+                for row in range(temp.get_length()[0]):
                     if row != i:
                         val = temp[row][j]
 
-                        temp[row] = temp[row] - val * temp[i].get_unit(j) 
+                        temp[row] = temp[row] - val * temp[i].get_unit(j)
 
             else:
                 for row in range(i, temp.get_length()[0]):
@@ -274,19 +274,19 @@ class Matrix:
             return
 
     def getTranspose(self):
-        return Matrix([self.get_Col(num).get_column() for num in range(self.get_length()[1] )  ])
+        return Matrix([self.get_Col(num).get_column() for num in range(self.get_length()[1])])
 
     def getDeterminant(self):
-        if self.get_length() == (1,1):
+        if self.get_length() == (1, 1):
             return None
         if not self.isSquare():
             return None
         else:
-            if self.get_length() == (2,2):
+            if self.get_length() == (2, 2):
                 return self[0][0] * self[1][1] - self[0][1] * self[1][0]
             else:
-                return Matrix._sumDet(   [  self[0][i] * Matrix._getNewM(self, (0, i)).getDeterminant() for i in range( len(self[0])  ) ]    )
-    
+                return Matrix._sumDet([self[0][i] * Matrix._getNewM(self, (0, i)).getDeterminant() for i in range(len(self[0]))])
+
     def _getNewM(m, r_c):
         n = m.get_copy()
         n.removeRow(r_c[0])
@@ -294,9 +294,7 @@ class Matrix:
         return n
 
     def _sumDet(l):
-        return sum(num if e_o % 2 == 0 else -num  for num, e_o  in zip(l, [n for n in range(len(l))])     )
-
-
+        return sum(num if e_o % 2 == 0 else -num for num, e_o in zip(l, [n for n in range(len(l))]))
 
     # Getters
     def get_length(self):
@@ -310,8 +308,6 @@ class Matrix:
 
     def get_Row(self, row_num):
         return self[row_num]
-
-    
 
     def get_copy(self):
         return eval(repr(self))
@@ -327,49 +323,44 @@ class Matrix:
         temp0 = self.getEchelonForm(reduced=True)
         return temp0 == Matrix.iMatrix(self.get_length()[0])
 
-
-
     def isRowEquiTo(self, matrix):
         temp0 = self.getEchelonForm(reduced=True)
         temp1 = matrix.getEchelonForm(reduced=True)
         return temp0 == temp1
-    
-
 
     def isConsistent(self):
         """ Must be an augmented matrix!!! """
-        temp = self.getEchelonForm(reduced = True)
-        temp = temp.get_Row(temp.get_length()[0]-1)
+        temp = self.getEchelonForm(reduced=True)
+        temp = temp.get_Row(temp.get_length()[0] - 1)
         num = 0
         for e in temp:
             num += 1 if e != 0 else 0
-        return not (num == 1 and temp[len(temp)-1] != 0 )
-        
+        return not (num == 1 and temp[len(temp) - 1] != 0)
 
     def isInvertible(self):
-# 1. A is row-equivalent to the n×n identity matrix I_n.
-# 2. A has n pivot positions.
-# 3. The equation Ax=0 has only the trivial solution x=0.
-# 4. The columns of A form a linearly independent set.
-# 5. The linear transformation x|->Ax is one-to-one.
-# 6. For each column vector b in R^n, the equation Ax=b has a unique solution.
-# 7. The columns of A span R^n.
-# 8. The linear transformation x|->Ax is a surjection.
-# 9. There is an n×n matrix C such that CA=I_n.
-# 10. There is an n×n matrix D such that AD=I_n.
-# 11. The transpose matrix A^(T) is invertible.
-# 12. The columns of A form a basis for R^n.
-# 13. The column space of A is equal to R^n.
-# 14. The dimension of the column space of A is n.
-# 15. The rank of A is n.
-# 16. The null space of A is {0}.
-# 17. The dimension of the null space of A is 0.
-# 18. 0 fails to be an eigenvalue of A.
-# 19. The determinant of A is not zero.
-# 20. The orthogonal complement of the column space of A is {0}.
-# 21. The orthogonal complement of the null space of A is R^n.
-# 22. The row space of A is R^n.
-# 23. The matrix A has n non-zero singular values. 
+        # 1. A is row-equivalent to the n×n identity matrix I_n.
+        # 2. A has n pivot positions.
+        # 3. The equation Ax=0 has only the trivial solution x=0.
+        # 4. The columns of A form a linearly independent set.
+        # 5. The linear transformation x|->Ax is one-to-one.
+        # 6. For each column vector b in R^n, the equation Ax=b has a unique solution.
+        # 7. The columns of A span R^n.
+        # 8. The linear transformation x|->Ax is a surjection.
+        # 9. There is an n×n matrix C such that CA=I_n.
+        # 10. There is an n×n matrix D such that AD=I_n.
+        # 11. The transpose matrix A^(T) is invertible.
+        # 12. The columns of A form a basis for R^n.
+        # 13. The column space of A is equal to R^n.
+        # 14. The dimension of the column space of A is n.
+        # 15. The rank of A is n.
+        # 16. The null space of A is {0}.
+        # 17. The dimension of the null space of A is 0.
+        # 18. 0 fails to be an eigenvalue of A.
+        # 19. The determinant of A is not zero.
+        # 20. The orthogonal complement of the column space of A is {0}.
+        # 21. The orthogonal complement of the null space of A is R^n.
+        # 22. The row space of A is R^n.
+        # 23. The matrix A has n non-zero singular values.
 
         return self.isSquare() and self.getDeterminant() != 0
 
@@ -377,20 +368,20 @@ class Matrix:
 if __name__ == '__main__':
 
     # tests
-    m = Matrix([[2, -2, 4],
-                [4, 1, 2],
-                [6, 1, 2]])
+    m = Matrix([
+                [0, 0, 0,],
+                [-1, -3, 9],
+                [0, -1, 3]])
 
-    n = Matrix([[1, 0, 0, 0],
-                [0, 1, 0, 0],
-                [0, 0, 1, 0],
-                [0, 0, 0, 0]])
+    n = Matrix([
+                [1, 1, -1,  1],
+                [-1, -2, 2, 0],
+                [-1, -2, 2, 0]])
 
+    v = Matrix.Vector([1, -3, 1, 1])
 
+    print(m.getEchelonForm(reduced = True))
 
-    print(n.isInvertible())
-
-    
     pass
     # test
     # TODO Add __eq__() method to compare whether two matrices are the same
